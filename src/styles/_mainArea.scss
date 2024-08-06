@@ -35,6 +35,12 @@
 
       display: grid;
       grid-template-columns: 3fr 10fr 5fr 5fr 5fr 5fr;
+      grid-gap: 1rem;
+
+      & li {
+        display: flex;
+        align-items: center;
+      }
 
       &--names {
         font-size: 1.3rem;
