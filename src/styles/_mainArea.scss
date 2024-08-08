@@ -28,6 +28,9 @@
   &__content {
     background-color: var(--color-primary-darker);
     padding: 0 1rem;
+    padding-bottom: 1rem;
+    display: grid;
+    grid-template-rows: repeat(auto-fit, max-content);
 
     &__row {
       padding: 0 1rem;

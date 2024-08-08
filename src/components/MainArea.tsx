@@ -1,13 +1,19 @@
 import { useTableContext } from '../contexts/TableContext';
+import { ITEMS_PER_PAGE } from '../utils/constants';
+
 import AddForm from './AddForm';
 import Item from './Item';
+import Pagination from './Pagination';
 import Spinner from './Spinner';
 
 // prettier-ignore
 const columnNames = ['Уровень', 'Наименование работ', 'Основная з/п', 'Оборудование', 'Накладные расходы','Сметная прибыль']
 
 export default function MainArea() {
-  const { isPending, data } = useTableContext();
+  const { isPending, data, activePage } = useTableContext();
+
+  const from = (activePage - 1) * ITEMS_PER_PAGE;
+  const to = from + ITEMS_PER_PAGE - 1;
 
   return (
     <>
@@ -18,20 +24,28 @@ export default function MainArea() {
       </div>
 
       <section className='main-area__content'>
-        <ul className='main-area__content__row main-area__content__row--names'>
-          {columnNames.map(el => (
-            <li key={el}>{el}</li>
-          ))}
-        </ul>
+        <div>
+          <ul className='main-area__content__row main-area__content__row--names'>
+            {columnNames.map(el => (
+              <li key={el}>{el}</li>
+            ))}
+          </ul>
 
-        {isPending ? (
-          <Spinner />
-        ) : (
-          <>
-            <AddForm />
-            {data && !isPending && data.length !== 0 && data.map(el => <Item key={el.id} item={el} />)}
-          </>
-        )}
+          {isPending ? (
+            <Spinner />
+          ) : (
+            <>
+              <AddForm />
+
+              {data &&
+                !isPending &&
+                data.length !== 0 &&
+                data.slice(from, to).map(el => <Item key={el.id} item={el} />)}
+            </>
+          )}
+        </div>
+
+        {data && !isPending && data.length !== 0 && <Pagination count={data?.length} />}
       </section>
     </>
   );
