@@ -39,7 +39,7 @@ function TableContextProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setIsPending(true);
-    fetch(`${URL}/v1/outlay-rows/entity/${id}/row/list`)
+    fetch(`${URL}/v1/outlay-rows/entity/${id}/row/list`, { referrerPolicy: 'unsafe-url' })
       .then(res => res.json())
       .then(data => {
         setData(data);
@@ -51,6 +51,7 @@ function TableContextProvider({ children }: { children: ReactNode }) {
   function addNewRow(newRow: dataType) {
     console.log(newRow);
     fetch(`${URL}/v1/outlay-rows/entity/${id}/row/create`, {
+      referrerPolicy: 'unsafe-url',
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newRow),
@@ -60,6 +61,7 @@ function TableContextProvider({ children }: { children: ReactNode }) {
   function deleteRow(rowId: number) {
     console.log(rowId);
     fetch(`${URL}/v1/outlay-rows/entity/${id}/row/${rowId}/delete`, {
+      referrerPolicy: 'unsafe-url',
       method: 'DELETE',
     }).then(() => setCount(s => s + 1));
   }
@@ -67,6 +69,7 @@ function TableContextProvider({ children }: { children: ReactNode }) {
   function updateRow(row: dataType) {
     console.log(row);
     fetch(`${URL}/v1/outlay-rows/entity/${id}/row/${row.id}/update`, {
+      referrerPolicy: 'unsafe-url',
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(row),
