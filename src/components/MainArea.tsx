@@ -1,14 +1,13 @@
 import { useTableContext } from '../contexts/TableContext';
 import AddForm from './AddForm';
+import Item from './Item';
 import Spinner from './Spinner';
 
 // prettier-ignore
 const columnNames = ['Уровень', 'Наименование работ', 'Основная з/п', 'Оборудование', 'Накладные расходы','Сметная прибыль']
 
 export default function MainArea() {
-  const { isPending, error, data } = useTableContext();
-
-  console.log(isPending, error, data);
+  const { isPending, data } = useTableContext();
 
   return (
     <>
@@ -25,11 +24,14 @@ export default function MainArea() {
           ))}
         </ul>
 
-        {error && <h1>An error occured...</h1>}
-        {isPending && <Spinner />}
-        {!error && !isPending && data.length === 0 && <AddForm />}
-
-        {!error && !isPending && data.length !== 0 && data.map(el => <h1>{el.equipmentCosts}</h1>)}
+        {isPending ? (
+          <Spinner />
+        ) : (
+          <>
+            <AddForm />
+            {data && !isPending && data.length !== 0 && data.map(el => <Item key={el.id} item={el} />)}
+          </>
+        )}
       </section>
     </>
   );

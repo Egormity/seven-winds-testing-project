@@ -1,41 +1,83 @@
-import { useQuery } from '@tanstack/react-query';
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+
 import { URL } from '../utils/constants';
+
+export type dataType = {
+  id: number;
+  rowName: string;
+  total: number;
+  salary: number;
+  mimExploitation: number;
+  machineOperatorSalary: number;
+  materials: number;
+  mainCosts: number;
+  supportCosts: number;
+  equipmentCosts: number;
+  overheads: number;
+  estimatedProfit: number;
+  child: [];
+};
 
 type TableContextProps = {
   id: number;
-
   isPending: boolean;
-  error: object | null;
-  data: {
-    id: number;
-    rowName: string;
-    total: number;
-    salary: number;
-    mimExploitation: number;
-    machineOperatorSalary: number;
-    materials: number;
-    mainCosts: number;
-    supportCosts: number;
-    equipmentCosts: number;
-    overheads: number;
-    estimatedProfit: number;
-    child: [];
-  }[];
+  data: dataType[] | null;
+  addNewRow: (newRow: dataType) => void;
+  setCount: (value: number) => void;
+  deleteRow: (rowId: number) => void;
+  updateRow: (row: dataType) => void;
 } | null;
 
 const TableContext = createContext<TableContextProps>(null);
 
 function TableContextProvider({ children }: { children: ReactNode }) {
+  const [isPending, setIsPending] = useState(false);
+  const [data, setData] = useState(null);
+  const [count, setCount] = useState(0);
+
   const id = 133930;
 
-  const { isPending, error, data } = useQuery({
-    queryKey: ['repoData'],
-    queryFn: () =>
-      fetch(`${URL}/v1/outlay-rows/entity/${id}/row/list`, { method: 'GET' }).then(res => res.json()),
-  });
+  useEffect(() => {
+    setIsPending(true);
+    fetch(`${URL}/v1/outlay-rows/entity/${id}/row/list`)
+      .then(res => res.json())
+      .then(data => {
+        setData(data);
+        console.log(data);
+      })
+      .then(() => setIsPending(false));
+  }, [count]);
 
-  return <TableContext.Provider value={{ isPending, error, data, id }}>{children}</TableContext.Provider>;
+  function addNewRow(newRow: dataType) {
+    console.log(newRow);
+    fetch(`${URL}/v1/outlay-rows/entity/${id}/row/create`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newRow),
+    }).then(() => setCount(s => s + 1));
+  }
+
+  function deleteRow(rowId: number) {
+    console.log(rowId);
+    fetch(`${URL}/v1/outlay-rows/entity/${id}/row/${rowId}/delete`, {
+      method: 'DELETE',
+    }).then(() => setCount(s => s + 1));
+  }
+
+  function updateRow(row: dataType) {
+    console.log(row);
+    fetch(`${URL}/v1/outlay-rows/entity/${id}/row/${row.id}/update`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(row),
+    }).then(() => setCount(s => s + 1));
+  }
+
+  return (
+    <TableContext.Provider value={{ isPending, data, id, addNewRow, setCount, deleteRow, updateRow }}>
+      {children}
+    </TableContext.Provider>
+  );
 }
 
 function useTableContext() {
