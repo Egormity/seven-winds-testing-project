@@ -7,7 +7,7 @@ import Pagination from './Pagination';
 import Spinner from './Spinner';
 
 // prettier-ignore
-const columnNames = ['Уровень', 'Наименование работ', 'Основная з/п', 'Оборудование', 'Накладные расходы','Сметная прибыль']
+const columnNames = ['Редактирование', 'Наименование работ', 'Основная з/п', 'Оборудование', 'Накладные расходы','Сметная прибыль']
 
 export default function MainArea() {
   const { isPending, data, activePage } = useTableContext();

@@ -33,7 +33,11 @@ export default function Pagination({ count }: { count: number | undefined }) {
       </p>
 
       <div className='pagination__buttons-container'>
-        <button disabled={activePage === 1} onClick={prevPage} className='pagination__button'>
+        <button
+          disabled={activePage === 1}
+          onClick={prevPage}
+          className={`${activePage === 1 ? 'pagination__button--disabled' : ''} pagination__button`}
+        >
           <HiChevronLeft />
         </button>
 
@@ -45,7 +49,11 @@ export default function Pagination({ count }: { count: number | undefined }) {
           <Spinner />
         )}
 
-        <button disabled={activePage === pageCount} onClick={nextPage} className='pagination__button'>
+        <button
+          disabled={activePage === pageCount}
+          onClick={nextPage}
+          className={`${activePage === pageCount ? 'pagination__button--disabled' : ''} pagination__button`}
+        >
           <HiChevronRight />
         </button>
       </div>

@@ -42,7 +42,7 @@ export default function Form() {
     <form onSubmit={handleSubmit(onSubmit)} className='main-area__content__row main-area__content__row--item'>
       <button style={{ display: 'none' }}></button>
 
-      <div className='main-area__icon'>х</div>
+      <div className='main-area__icon'></div>
 
       <div className='relative'>
         <InputUseForm
