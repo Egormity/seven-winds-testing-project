@@ -25,6 +25,9 @@ type TableContextProps = {
   activePage: number;
   setActivePage: (value: number) => void;
 
+  isOpenItem: dataType | null;
+  setIsOpenItem: (value: dataType | null) => void;
+
   addNewRow: (newRow: dataType) => void;
   setCount: (value: number) => void;
   deleteRow: (rowId: number) => void;
@@ -38,6 +41,7 @@ function TableContextProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState(null);
   const [count, setCount] = useState(0);
   const [activePage, setActivePage] = useState(1);
+  const [isOpenItem, setIsOpenItem] = useState(null);
 
   const id = 133930;
 
@@ -82,7 +86,19 @@ function TableContextProvider({ children }: { children: ReactNode }) {
 
   return (
     <TableContext.Provider
-      value={{ isPending, data, activePage, setActivePage, addNewRow, setCount, deleteRow, updateRow }}
+      value={{
+        isPending,
+        data,
+        activePage,
+        isOpenItem,
+        // @ts-expect-error dispatch err
+        setIsOpenItem,
+        setActivePage,
+        addNewRow,
+        setCount,
+        deleteRow,
+        updateRow,
+      }}
     >
       {children}
     </TableContext.Provider>

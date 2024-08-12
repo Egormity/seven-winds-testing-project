@@ -2,12 +2,11 @@ import { BsClipboardDataFill } from 'react-icons/bs';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 
 import { dataType, useTableContext } from '../contexts/TableContext';
-import { useState } from 'react';
 import InputUseForm from './InputUseForm';
 import { useForm } from 'react-hook-form';
 
 export default function Item({ item }: { item: dataType }) {
-  const { updateRow } = useTableContext();
+  const { updateRow, deleteRow, isOpenItem, setIsOpenItem } = useTableContext();
   const { register, handleSubmit, formState } = useForm<SubmitEvent>();
   const { errors } = formState;
 
@@ -25,24 +24,21 @@ export default function Item({ item }: { item: dataType }) {
     updateRow(newRow);
   };
 
-  const { deleteRow } = useTableContext();
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
     <form className='main-area__content__row main-area__content__row--item' onSubmit={handleSubmit(onSubmit)}>
       <div className='main-area__list--icon'>
-        {!isOpen ? (
-          <BsClipboardDataFill className='main-area__icon' onClick={() => setIsOpen(s => !s)} />
+        {isOpenItem !== item ? (
+          <BsClipboardDataFill className='main-area__icon' onClick={() => setIsOpenItem(item)} />
         ) : (
           <>
             <BsClipboardDataFill
               className='main-area__icon main-area__icon--add'
-              onClick={() => setIsOpen(s => !s)}
+              onClick={() => setIsOpenItem(null)}
             />
             <RiDeleteBin5Fill
               className='main-area__icon main-area__icon--delete'
               onClick={() => {
-                setIsOpen(s => !s);
+                setIsOpenItem(null);
                 deleteRow(item.id);
               }}
             />
@@ -50,7 +46,7 @@ export default function Item({ item }: { item: dataType }) {
         )}
       </div>
 
-      {!isOpen ? (
+      {isOpenItem !== item ? (
         <>
           {' '}
           <div>{item.rowName}</div>
